@@ -1,0 +1,9 @@
+# Virtual Environment ko ignore karo
+venv/
+
+# Temporary python files
+__pycache__/
+*.py[cod]
+
+# Sensitive keys
+.env
