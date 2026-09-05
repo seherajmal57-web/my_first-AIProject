@@ -1,6 +1,3 @@
-# import numpy as np
-
-# print("Hello! Welcome to the NumPy tutorial.")
 import os
 from typing import Optional
 from dotenv import load_dotenv
@@ -11,6 +8,7 @@ from pydantic import BaseModel, Field, HttpUrl, field_validator
 # -------------------------------------------------------------------
 load_dotenv()
 
+
 # -------------------------------------------------------------------
 # 2. Custom Domain Exceptions
 # -------------------------------------------------------------------
@@ -18,9 +16,11 @@ class ModelInferenceError(Exception):
     """Raised when the AI model fails during prediction or processing."""
     pass
 
+
 class ConfigurationError(Exception):
     """Raised when mandatory environment configurations are missing."""
     pass
+
 
 # -------------------------------------------------------------------
 # 3. Data Validation & Type Hints (Pydantic)
@@ -39,6 +39,7 @@ class ImagePayload(BaseModel):
             return []
         return [tag.strip().lower() for tag in tags_list if tag.strip()]
 
+
 # -------------------------------------------------------------------
 # 4. Object-Oriented Programming (OOP) for AI Systems
 # -------------------------------------------------------------------
@@ -50,12 +51,13 @@ class BasePipeline:
     def predict(self, payload: ImagePayload) -> dict:
         raise NotImplementedError("Subclasses must implement the predict method.")
 
+
 class ModelPipeline(BasePipeline):
     """Production AI Pipeline handling model inference and validation."""
-    
+
     def __init__(self, model_name: str, api_key: str):
         super().__init__(model_name)
-        self.__api_key = api_key  # Private attribute (Name mangling)
+        self.__api_key = api_key  # Private attribute
 
     @classmethod
     def from_env(cls):
@@ -77,12 +79,10 @@ class ModelPipeline(BasePipeline):
         """Executes prediction on validated ImagePayload with robust error handling."""
         try:
             print(f"[LOG] Executing pipeline for payload URL: {payload.image_url}")
-            
-            # Simulated inference failure logic for demonstration
+
             if "fail" in str(payload.image_url):
                 raise ModelInferenceError("Inference failed: Corrupted image stream.")
 
-            # Processing output dictionary
             result = {
                 "status": "success",
                 "model": self._model_name,
@@ -106,6 +106,7 @@ class ModelPipeline(BasePipeline):
     def __repr__(self) -> str:
         """Dunder method for developer string representation."""
         return f"ModelPipeline(model='{self._model_name}', status='Active')"
+
 
 # -------------------------------------------------------------------
 # 5. Execution & Verification Workflow
@@ -132,16 +133,10 @@ if __name__ == "__main__":
     }
 
     try:
-        # Validate input via Pydantic model
         payload = ImagePayload(**raw_data)
-        
-        # Run inference
         prediction = pipeline.predict(payload)
         print(f"Prediction Result: {prediction}\n")
-        
-        # Model serialization example
         print(f"Serialized Payload JSON:\n{payload.model_dump_json(indent=2)}\n")
-
     except Exception as e:
         print(f"Payload validation or execution failed: {e}\n")
 
